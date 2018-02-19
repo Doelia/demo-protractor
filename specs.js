@@ -1,15 +1,30 @@
 describe('Protractor Demo App', () => {
 
-	beforeEach(() => {
+	beforeEach(function() {
 		browser.get('http://juliemr.github.io/protractor-demo/');
 	});
 
 	it('should add one and two', () => {
-		element(by.model('first')).sendKeys(1);
-		element(by.model('second')).sendKeys(2);
-		element(by.id('gobutton')).click();
+		add(1, 2);
 		const result = element(by.binding('latest')).getText();
 		expect(result).toEqual('3');
 	});
 
+	it('should have a history', () => {
+		add(1, 2);
+		add(2, 6);
+		add(3, 3);
+		add(-1, 1);
+		add(2, 0);
+
+		const history = element.all(by.repeater('result in memory'));
+		expect(history.count()).toEqual(5);
+	});
+
+	const add = (a, b) => {
+		element(by.model('first')).sendKeys(a);
+		element(by.model('second')).sendKeys(b);
+		element(by.id('gobutton')).click();
+	};
 });
+
